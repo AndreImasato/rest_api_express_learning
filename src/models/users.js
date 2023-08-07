@@ -22,7 +22,12 @@ const usersSchema = new Schema(
       type: Boolean,
       default: true,
     },
-    //TODO permission/user role
+    roles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Roles'
+      }
+    ]
   },
   { timestamps: true }
 );

@@ -7,10 +7,12 @@ import bodyParser from 'body-parser';
 
 import models, { connectDb } from './models';
 import routes from './routes';
+import { createRoles } from './utils/createRoles'
 
 // Start express server
 connectDb()
   .then(async () => {
+    createRoles();
 
     // multer instance
     const upload = multer();

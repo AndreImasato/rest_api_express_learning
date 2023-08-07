@@ -6,6 +6,7 @@ import jwt from 'jsonwebtoken';
 import { BadRequestError } from '../utils/errors';
 import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
+import Roles from '../models/roles';
 
 const router = Router();
 //TODO (only authenticated)
@@ -50,11 +51,20 @@ router.post(
 
     const hash = bcrypt.hashSync(req.body.password_1, parseInt(process.env.BCRYPT_SALT_ROUNDS));
 
-    Users.create({
+    let userPayload = {
       email: req.body.email,
       username: req.body.username,
       password: hash
-    })
+    }
+
+    if (req.body.roles){
+      const roles = await Roles.find({
+        name: { $in: req.body.roles }
+      })
+      userPayload['roles'] = roles.map((role) => { return role._id });
+    }
+
+    Users.create(userPayload)
       .then((user) => {
         const token = signJwt(user)
         return res.status(201).json({ token: token });

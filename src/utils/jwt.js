@@ -5,9 +5,9 @@ export const signJwt = (user, options = {}) => {
   const userPayload = {
     id: user._id,
     username: user.username,
-    email: user.email
+    email: user.email,
+    roles: user.roles
   }
-  //TODO setup expiration
   const today = new Date();
   const expirationDate = new Date(today);
   expirationDate.setDate(today.getDate() + parseInt(process.env.JWT_EXPIRATION_DAYS));
