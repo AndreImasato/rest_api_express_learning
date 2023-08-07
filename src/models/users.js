@@ -22,9 +22,18 @@ const usersSchema = new Schema(
       type: Boolean,
       default: true,
     },
+    //TODO permission/user role
   },
   { timestamps: true }
 );
+
+usersSchema.statics.findByLogin = async function(login) {
+  let user = await this.findOne({
+    username: login,
+  });
+
+  return user;
+}
 
 const Users = mongoose.model("users", usersSchema);
 export default Users;

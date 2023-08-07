@@ -7,7 +7,7 @@ import { BadRequestError } from '../utils/errors';
 import Users from '../models/users';
 
 const router = Router();
-//TODO implement registering (only authenticated)
+//TODO (only authenticated)
 router.post(
   '/',
   async (req, res, next) => {
@@ -69,5 +69,7 @@ router.post(
 );
 //TODO implement fetch all users (only authenticated)
 //TODO implement fetch user (only authenticated)
+//TODO implement patch user (only authenticated)
+//TODO implement delete user (only authentitcated)
 
 export default router;

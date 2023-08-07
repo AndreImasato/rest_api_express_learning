@@ -37,6 +37,7 @@ connectDb()
      * app.use('/example', routes.example);
      */
     app.use('/users', routes.users);
+    app.use('/auth', routes.auth);
 
     app.get(
       '/',
