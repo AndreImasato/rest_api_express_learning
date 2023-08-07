@@ -36,6 +36,7 @@ connectDb()
     /**
      * app.use('/example', routes.example);
      */
+    app.use('/users', routes.users);
 
     app.get(
       '/',
@@ -48,7 +49,7 @@ connectDb()
     app.use((error, req, res) => {
       if (!error.statusCode) error.statusCode = 500;
 
-      
+      console.log(error);
       return res
         .status(error.statusCode)
         .json({ error: error.toString() });

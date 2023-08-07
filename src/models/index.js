@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 // Import models here
+import Users from './users';
 
 const connectDb = async () => {
   return await mongoose.connect(
@@ -17,6 +18,7 @@ const connectDb = async () => {
 
 const models = {
   // "list" models here
+  Users,
 };
 
 export { connectDb };
