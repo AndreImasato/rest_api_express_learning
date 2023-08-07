@@ -4,7 +4,11 @@ import mongoose from 'mongoose';
 
 const connectDb = async () => {
   return await mongoose.connect(
-    process.env.DATABASE_URL
+    process.env.DATABASE_URL,
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    },
   ).catch((error) => {
     console.error(error);
     process.exit(1);
