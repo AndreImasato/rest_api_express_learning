@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import { BadRequestError } from '../utils/errors';
+import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
 
 const router = Router();
@@ -55,14 +56,11 @@ router.post(
       password: hash
     })
       .then((user) => {
-        const token = jwt
-          .sign(
-            { id: user._id, email: user.email, username: user.username },
-            process.env.SECRET_KEY
-          )
+        const token = signJwt(user)
         return res.status(201).json({ token: token });
       })
       .catch((err) => {
+        //TODO improves error messages for validator
         return res.status(500).json({ error: err })
       });
   }

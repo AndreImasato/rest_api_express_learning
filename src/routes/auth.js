@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import Users from '../models/users';
+import { signJwt } from '../utils/jwt';
 
 const router = Router();
 
@@ -41,10 +42,7 @@ router.post(
     }
 
     // generate JWT
-    const token = jwt.sign(
-      { id: user._id, email: user.email, username: user.username },
-      process.env.SECRET_KEY
-    )
+    const token = signJwt(user);
     return res.status(200).json({ token: token })
   }
 );
