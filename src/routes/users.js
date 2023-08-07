@@ -7,6 +7,9 @@ import { BadRequestError } from '../utils/errors';
 import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
 import Roles from '../models/roles';
+import middleware from '../middlewares';
+
+const { authJwtMiddleware } = middleware;
 
 const router = Router();
 //TODO (only authenticated)
@@ -76,6 +79,9 @@ router.post(
   }
 );
 //TODO implement fetch all users (only authenticated)
+router.get('/', [authJwtMiddleware.verifyToken], async (req, res, next) => {
+  res.send('ok')
+})
 //TODO implement fetch user (only authenticated)
 //TODO implement patch user (only authenticated)
 //TODO implement delete user (only authentitcated)
