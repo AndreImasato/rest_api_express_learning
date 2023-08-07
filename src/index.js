@@ -2,9 +2,14 @@ import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
+import multer from 'multer';
+import bodyParser from 'body-parser';
 
 import models, { connectDb } from './models';
 import routes from './routes';
+
+// multer instance
+const upload = multer();
 
 // Create instance of express application
 const app = express();
@@ -12,6 +17,10 @@ const app = express();
 // Add parser middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Parsing multipart/form-data
+app.use(upload.array());
+app.use(express.static('public'));
 
 // Use CORS
 app.use(cors());
@@ -29,7 +38,7 @@ app.get(
   (req, res) => {
     return res.status(200).send('API Live!')
   }
-)
+);
 
 // Middleware for errors
 app.use((error, req, res) => {
