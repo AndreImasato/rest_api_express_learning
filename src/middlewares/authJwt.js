@@ -6,10 +6,13 @@ const Users = models.Users;
 const Roles = models.Roles;
 
 const verifyToken = (req, res, next) => {
-  let token = req.headers['x-access-token'] || req.headers['authorization'].split(" ")[1];
+  let token = req.headers['x-access-token'] || req.headers['authorization'];
+
   if (!token){
     return res.status(403).send({ message: 'No token provided' })
   }
+
+  token = token.split(" ")[1];
 
   jwt.verify(
     token,
