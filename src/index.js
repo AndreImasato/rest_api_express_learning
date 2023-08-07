@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 
 import models, { connectDb } from './models';
 import routes from './routes';
@@ -15,10 +16,20 @@ app.use(express.urlencoded({ extended: true }));
 // Use CORS
 app.use(cors());
 
+// Implements Helmet for extra security
+app.use(helmet());
+
 // Modular routes
 /**
  * app.use('/example', routes.example);
  */
+
+app.get(
+  '/',
+  (req, res) => {
+    return res.status(200).send('API Live!')
+  }
+)
 
 // Middleware for errors
 app.use((error, req, res) => {
