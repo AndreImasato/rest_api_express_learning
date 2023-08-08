@@ -12,9 +12,10 @@ import middleware from '../middlewares';
 const { authJwtMiddleware } = middleware;
 
 const router = Router();
-//TODO (only authenticated)
+// Create new user (only admin)
 router.post(
   '/',
+  [authJwtMiddleware.verifyToken, authJwtMiddleware.isAdmin],
   async (req, res, next) => {
     const fieldErrors = {};
     if (!req.body.username || req.body.username === ''){
@@ -78,11 +79,26 @@ router.post(
       });
   }
 );
-//TODO implement fetch all users (only authenticated)
-router.get('/', [authJwtMiddleware.verifyToken], async (req, res, next) => {
-  res.send('ok')
-})
-//TODO implement fetch user (only authenticated)
+
+// implement fetch all users (only authenticated)
+router.get(
+  '/',
+  [authJwtMiddleware.verifyToken],
+  async (req, res, next) => {
+    const users = await Users.find();
+    return res.status(200).json({ users });
+  }
+);
+
+// implement fetch user (only authenticated)
+router.get(
+  '/:userId',
+  [authJwtMiddleware.verifyToken],
+  async (req, res, next) => {
+    const user = await Users.findById(req.params.userId);
+    return res.status(200).json({ user });
+  }
+);
 //TODO implement patch user (only authenticated)
 //TODO implement delete user (only authentitcated)
 
