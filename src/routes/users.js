@@ -100,6 +100,23 @@ router.get(
   }
 );
 //TODO implement patch user (only authenticated)
-//TODO implement delete user (only authentitcated)
+// implement delete user (only authentitcated)
+router.delete(
+  '/:userId',
+  [authJwtMiddleware.verifyToken, authJwtMiddleware.isAdmin],
+  async (req, res, next) => {
+    Users
+      .findByIdAndRemove(
+        req.params.userId,
+        { useFindAndModify: false }
+      )
+      .then(() => {
+        return res.status(204).send({ message: "User successfully deleted" });
+      })
+      .catch((err) => {
+        return res.status(500).json({ error: err })
+      })    
+  }
+)
 
 export default router;
