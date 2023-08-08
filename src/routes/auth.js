@@ -4,6 +4,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import Users from '../models/users';
+import RefreshToken from '../models/auth';
 import { signJwt } from '../utils/jwt';
 
 const router = Router();
@@ -42,11 +43,60 @@ router.post(
     }
 
     // generate JWT
-    const token = signJwt(user);
-    return res.status(200).json({ token: token })
+    const accessToken = signJwt(user);
+
+    // generate Refresh token
+    const refreshToken = await RefreshToken.createToken(user);
+    return res
+      .status(200)
+      .json({ access: accessToken, refresh: refreshToken })
   }
 );
 //TODO implements login with JWT
-//TODO implements refresh token (only authenticated)
+// implements refresh token
+router.post(
+  '/refresh',
+  async (req, res, next) => {
+    const { refreshToken: requestToken } = req.body;
+    if (requestToken == null){
+      return res
+        .status(403)
+        .json({ error: "Refresh token is required!" });
+    }
+    // generate new refresh token and access token
+
+    try {
+      let refreshToken = await RefreshToken.findOne({ token: requestToken });
+      if (!refreshToken){
+        return res.status(403).json({
+          error: 'Refresh token not recognized'
+        });
+      }
+
+      if (RefreshToken.verifyExpiration(refreshToken)){
+        await RefreshToken.findByIdAndRemove(
+          refreshToken._id,
+          { useFindAndModify: false }
+        );
+
+        return res.status(403).json({
+          error: "Refresh token is expired. Sign in again."
+        });
+      }
+
+      const user = Users.findById(refreshToken.user._id);
+
+      let newAccessToken = signJwt(user);
+      return res
+        .status(200)
+        .json({
+          access: newAccessToken,
+          refresh: refreshToken.token
+        })
+    } catch (err) {
+      return res.status(500).send({ error: err });
+    }
+  }
+);
 
 export default router;

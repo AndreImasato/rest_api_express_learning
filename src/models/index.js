@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 // Import models here
 import Users from './users';
 import Roles from './roles';
+import RefreshToken from './auth';
 
 const connectDb = async () => {
   return await mongoose.connect(
@@ -21,6 +22,7 @@ const models = {
   // "list" models here
   Users,
   Roles,
+  RefreshToken,
 };
 
 export { connectDb };

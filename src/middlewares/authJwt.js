@@ -5,6 +5,17 @@ import models from '../models';
 const Users = models.Users;
 const Roles = models.Roles;
 
+
+const { TokenExpiredError } = jwt;
+
+const catchError = (err, res) => {
+  if (err instanceof TokenExpiredError){
+    return res.status(401).send({ error: "Unauthorized: Access token is expired" });
+  }
+
+  return res.sendStatus(401).send({ error: "Unauthorized" });
+}
+
 const verifyToken = (req, res, next) => {
   let token = req.headers['x-access-token'] || req.headers['authorization'];
 
@@ -19,11 +30,12 @@ const verifyToken = (req, res, next) => {
     process.env.SECRET_KEY,
     (err, decoded) => {
       if (err){
-        return res
-          .status(401)
-          .send({ message: 'Unauthorized' })
+        return catchError(err, res);
       }
 
+      req.context = {
+        user: decoded
+      }
       req.userId = decoded.id;
       next();
     }

@@ -10,7 +10,7 @@ export const signJwt = (user, options = {}) => {
   }
   const today = new Date();
   const expirationDate = new Date(today);
-  expirationDate.setDate(today.getDate() + parseInt(process.env.JWT_EXPIRATION_DAYS));
+  expirationDate.setSeconds(today.getSeconds() + parseInt(process.env.JWT_EXPIRATION));
   options['expiresIn'] = parseInt(expirationDate.getTime() / 1000, 10);
   return jwt.sign(
     userPayload,
