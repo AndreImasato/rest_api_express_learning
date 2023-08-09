@@ -1,13 +1,13 @@
 import { Router } from 'express';
 import _ from 'lodash';
-import bcrypt, { hash } from 'bcryptjs';
-import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import { checkSchema } from 'express-validator';
 
-import { BadRequestError } from '../utils/errors';
 import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
 import Roles from '../models/roles';
 import middleware from '../middlewares';
+import registerUserSchema from '../validationSchemas/registerUserSchema';
 
 const { authJwtMiddleware } = middleware;
 
@@ -17,31 +17,16 @@ router.post(
   '/',
   [authJwtMiddleware.verifyToken, authJwtMiddleware.isAdmin],
   async (req, res, next) => {
+    const result = await checkSchema(registerUserSchema).run(req);
     const fieldErrors = {};
-    if (!req.body.username || req.body.username === ''){
-      fieldErrors['username'] = 'Username is required!';
-    }
-
-    if (!req.body.email || req.body.email === ''){
-      fieldErrors['email'] = 'Email is required!';
-    }
-
-    //TODO check if email is a valid email
-
-    if (!req.body.password_1 || req.body.password_1 === ''){
-      fieldErrors['password_1'] = 'Password is required!';
-    }
-
-    //TODO validate password "strength"
-
-    if (!req.body.password_2 || req.body.password_2 === ''){
-      fieldErrors['password_2'] = 'Password confirmation is required!';
-    }
-
-    //TODO validate password "strength"
-
-    if (req.body.password_1 !== req.body.password_2){
-      fieldErrors['password_2'] = "Passwords don't match";
+    if (!_.isEmpty(result)){
+      result.forEach(el => {
+        if (!_.isEmpty(el.errors)){
+          el.errors.forEach(err => {
+            fieldErrors[err.path] = err.msg;
+          });
+        }
+      });
     }
 
     if (!_.isEmpty(fieldErrors)){
