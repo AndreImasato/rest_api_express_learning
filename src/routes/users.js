@@ -1,13 +1,14 @@
 import { Router } from 'express';
 import _ from 'lodash';
 import bcrypt from 'bcryptjs';
-import { checkSchema } from 'express-validator';
+import { check, checkSchema } from 'express-validator';
 
 import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
 import Roles from '../models/roles';
 import middleware from '../middlewares';
 import registerUserSchema from '../validationSchemas/registerUserSchema';
+import checkPasswordStrength from '../utils/checkPassword'
 
 const { authJwtMiddleware } = middleware;
 
@@ -94,7 +95,11 @@ router.patch(
     const fieldErrors = {};
 
     if (password_1 && password_2 && password_1 !== '' && password_2 !== '' && password_1 === password_2){
-      //TODO check password_1 strength
+      // check password_1 strength
+      if (!checkPasswordStrength(password_1)){
+        fieldErrors['password_1'] = "Weak password. Must contain at least one letter, one number and one special character.";
+        return res.status(400).send({ errors: fieldErrors });
+      }
       const hash = bcrypt.hashSync(
         req.body.password_1,
         parseInt(process.env.BCRYPT_SALT_ROUNDS)

@@ -1,4 +1,5 @@
-//TODO validate password strength
+import checkPasswordStrength from '../utils/checkPassword';
+
 const registerUserSchema = {
   email: {
     errorMessage: 'Email is required!',
@@ -15,13 +16,22 @@ const registerUserSchema = {
   password_1: {
     trim: true,
     escape: true,
+    errorMessage: 'Password is required!',
     isLength: {
       options: {
         min: 8
       },
       errorMessage: 'Password must have at least 8 characters!'
     },
-    errorMessage: 'Password is required!'
+    custom: {
+      options: (value) => {
+        if (!checkPasswordStrength(value)){
+          throw new Error("Weak password. Must contain at least one letter, one number and one special character.");
+        }
+        return value;
+      },
+      errorMessage: "Weak password. Must contain at least one letter, one number and one special character."
+    }
   },
   password_2: {
     trim: true,
