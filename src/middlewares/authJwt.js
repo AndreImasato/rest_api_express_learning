@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import models from '../models';
+import { SECRET_KEY } from '../config'
 
 const Users = models.Users;
 const Roles = models.Roles;
@@ -27,7 +28,7 @@ const verifyToken = (req, res, next) => {
 
   jwt.verify(
     token,
-    process.env.SECRET_KEY,
+    SECRET_KEY,
     (err, decoded) => {
       if (err){
         return catchError(err, res);

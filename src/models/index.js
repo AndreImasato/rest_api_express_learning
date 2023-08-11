@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { DATABASE_URL } from '../config'
 
 // Import models here
 import Users from './users';
@@ -7,7 +8,7 @@ import RefreshToken from './auth';
 
 const connectDb = async () => {
   return await mongoose.connect(
-    process.env.DATABASE_URL,
+    DATABASE_URL,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true

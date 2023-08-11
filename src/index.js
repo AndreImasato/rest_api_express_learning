@@ -1,6 +1,4 @@
-if (process.env.NODE_ENV !== "production"){
-  require("dotenv").config();
-}
+import { PORT } from './config'
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
@@ -60,7 +58,7 @@ connectDb()
         .json({ error: error.toString() });
     });
 
-    app.listen(process.env.PORT,  () => {
-      console.log(`Example app listening on port ${process.env.PORT}`);
+    app.listen(PORT,  () => {
+      console.log(`Example app listening on port ${PORT}`);
     })
   })

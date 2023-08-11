@@ -3,6 +3,7 @@ import _ from 'lodash';
 import bcrypt from 'bcryptjs';
 import { check, checkSchema } from 'express-validator';
 
+import { BCRYPT_SALT_ROUNDS } from '../config'
 import { signJwt } from '../utils/jwt';
 import Users from '../models/users';
 import Roles from '../models/roles';
@@ -39,7 +40,10 @@ router.post(
         });
     }
 
-    const hash = bcrypt.hashSync(req.body.password_1, parseInt(process.env.BCRYPT_SALT_ROUNDS));
+    const hash = bcrypt.hashSync(
+      req.body.password_1,
+      BCRYPT_SALT_ROUNDS
+    );
 
     let userPayload = {
       email: req.body.email,
@@ -102,7 +106,7 @@ router.patch(
       }
       const hash = bcrypt.hashSync(
         req.body.password_1,
-        parseInt(process.env.BCRYPT_SALT_ROUNDS)
+        BCRYPT_SALT_ROUNDS
       );
       payload['password'] = hash;
     } else if (password_1 && password_1 !== '' && (!password_2 || password_2 === '')){
