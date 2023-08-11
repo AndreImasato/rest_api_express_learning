@@ -1,0 +1,51 @@
+version: "3.7"
+services:
+  mongo:
+    image: mongodb/mongodb-community-server:latest
+    container_name: express_mongo
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - mongo_data:/data/db
+    ports:
+      - 27018:27017
+    expose:
+      - 27018
+    networks:
+      - express-net
+  
+  express_web:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    image: express-learning:v1.0.0
+    container_name: express_web
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
+    environment:
+      - TZ=America/Sao_Paulo
+    volumes:
+      - ./src/:/usr/app/src/
+      - ./.env.docker:/usr/app/.env
+    entrypoint: /usr/app/entrypoint.dev.sh
+    ports:
+      - 8080:8000
+    expose:
+      - 8080
+    links:
+      - mongo
+    depends_on:
+      - mongo
+    networks:
+      - express-net
+
+volumes:
+  mongo_data:
+
+networks:
+  express-net:
+    name: express-net
+    driver: bridge

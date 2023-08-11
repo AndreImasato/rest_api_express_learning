@@ -1,0 +1,8 @@
+node_modules/
+.vscode/
+.git/
+
+.env
+.env.docker
+.Docker
+README.md
