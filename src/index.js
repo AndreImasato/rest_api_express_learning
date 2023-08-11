@@ -5,14 +5,22 @@ import helmet from 'helmet';
 import multer from 'multer';
 import bodyParser from 'body-parser';
 
-import models, { connectDb } from './models';
+import { connectDb } from './models';
 import routes from './routes';
-import { createRoles } from './utils/createRoles'
+import { createRoles } from './utils/createRoles';
+import { createSampleUsers } from './utils/createUsers';
 
 // Start express server
 connectDb()
   .then(async () => {
-    createRoles();
+    // create base roles
+    createRoles()
+      .then(() => {
+        // create sample users
+        if (process.env.NODE_ENV !== 'production'){
+          createSampleUsers();
+        }
+      });
 
     // multer instance
     const upload = multer();
