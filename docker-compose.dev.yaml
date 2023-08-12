@@ -37,10 +37,30 @@ services:
       - 8080
     links:
       - mongo
+      - localstack
     depends_on:
       - mongo
+      - localstack
     networks:
       - express-net
+  
+  localstack:
+    image: localstack/localstack:latest
+    container_name: express_localstack
+    ports:
+      - 4566:4566
+      - 4510-4559:4510-4559
+      - 8055:8080
+    environment:
+      - SERVICES=s3 #add more services as needed
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+    volumes: 
+      - ./tmp/localstack:/tmp/localstack
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - express-net
+
 
 volumes:
   mongo_data:
