@@ -22,3 +22,15 @@ To check created AWS S3 buckets, use the following command
 ```bash
 > aws --profile localstack --endpoint-url=http://localhost:4566 s3api list-buckets
 ```
+
+To make the bucket "public"
+```bash
+> aws --endpoint-url=http://localhost:4566 s3api put-bucket-acl --bucket demo-bucket --acl public-read
+```
+
+To list all created objects
+```bash
+> aws --endpoint-url=http://localhost:4566 s3 ls s3://demo-bucket
+```
+
+Or instead, access <code>http://localhost:4566/demo-bucket</code>

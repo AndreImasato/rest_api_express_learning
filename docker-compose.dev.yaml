@@ -55,8 +55,11 @@ services:
       - SERVICES=s3 #add more services as needed
       - DEBUG=1
       - DATA_DIR=/tmp/localstack/data
+      - DOCKER_HOST=unix:///var/run/docker.sock
+      - TEST_AWS_ACCESS_KEY_ID=123
+      - TEST_AWS_SECRET_ACCESS_KEY=xyz
     volumes: 
-      - ./tmp/localstack:/tmp/localstack
+      - ./.localstack:/tmp/localstack
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
       - express-net
@@ -68,4 +71,3 @@ volumes:
 networks:
   express-net:
     name: express-net
-    driver: bridge
