@@ -17,3 +17,8 @@ To create a sample AWS S3 Bucket, run the following command
 ```bash
 > aws --profile localstack --endpoint-url=http://localhost:4566 s3api create-bucket --bucket demo-bucket
 ```
+
+To check created AWS S3 buckets, use the following command
+```bash
+> aws --profile localstack --endpoint-url=http://localhost:4566 s3api list-buckets
+```

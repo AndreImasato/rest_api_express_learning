@@ -6,3 +6,7 @@ node_modules/
 .env.docker
 .Docker
 README.md
+
+config.json
+
+tmp/*

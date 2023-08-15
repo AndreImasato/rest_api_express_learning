@@ -2,13 +2,15 @@ import { PORT } from './config'
 import cors from 'cors';
 import express from 'express';
 import helmet from 'helmet';
-import multer from 'multer';
 import bodyParser from 'body-parser';
 
 import { connectDb } from './models';
 import routes from './routes';
 import { createRoles } from './utils/createRoles';
 import { createSampleUsers } from './utils/createUsers';
+import middlewares from './middlewares';
+
+const { uploadMiddleware } = middlewares;
 
 // Start express server
 connectDb()
@@ -22,9 +24,6 @@ connectDb()
         }
       });
 
-    // multer instance
-    const upload = multer();
-
     // Create instance of express application
     const app = express();
 
@@ -33,7 +32,7 @@ connectDb()
     app.use(express.urlencoded({ extended: true }));
 
     // Parsing multipart/form-data
-    app.use(upload.array());
+    app.use(uploadMiddleware.upload.array());
     app.use(express.static('public'));
 
     // Use CORS
@@ -48,6 +47,7 @@ connectDb()
      */
     app.use('/users', routes.users);
     app.use('/auth', routes.auth);
+    app.use('/files', routes.files);
 
     app.get(
       '/',
