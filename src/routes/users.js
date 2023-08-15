@@ -11,9 +11,11 @@ import middleware from '../middlewares';
 import registerUserSchema from '../validationSchemas/registerUserSchema';
 import checkPasswordStrength from '../utils/checkPassword'
 
-const { authJwtMiddleware } = middleware;
+const { authJwtMiddleware, uploadMiddleware } = middleware;
 
 const router = Router();
+router.use(uploadMiddleware.upload.array());
+
 // Create new user (only admin)
 router.post(
   '/',

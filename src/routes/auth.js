@@ -6,8 +6,14 @@ import jwt from 'jsonwebtoken';
 import Users from '../models/users';
 import RefreshToken from '../models/auth';
 import { signJwt } from '../utils/jwt';
+import middleware from '../middlewares'
+
+
+const { uploadMiddleware } = middleware;
 
 const router = Router();
+
+router.use(uploadMiddleware.upload.array());
 
 // implements login
 router.post(

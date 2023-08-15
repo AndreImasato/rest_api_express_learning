@@ -8,9 +8,7 @@ import { connectDb } from './models';
 import routes from './routes';
 import { createRoles } from './utils/createRoles';
 import { createSampleUsers } from './utils/createUsers';
-import middlewares from './middlewares';
 
-const { uploadMiddleware } = middlewares;
 
 // Start express server
 connectDb()
@@ -32,7 +30,6 @@ connectDb()
     app.use(express.urlencoded({ extended: true }));
 
     // Parsing multipart/form-data
-    app.use(uploadMiddleware.upload.array());
     app.use(express.static('public'));
 
     // Use CORS
