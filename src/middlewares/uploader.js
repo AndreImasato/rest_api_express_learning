@@ -20,16 +20,6 @@ const storage = multer.diskStorage({
     cb(null, file.originalname);
   }
 });
-/* const s3Storage = multerS3({
-  s3: s3,
-  bucket: AWS_S3_DEMO_BUCKET,
-  metadata: function (req, file, cb) {
-    cb(null, { fieldName: file.fieldname });
-  },
-  key: function (req, file, cb) {
-      cb(null, Date.now().toString())
-  }
-}); */
 
 // Configure fileFilter
 const fileFilter = (req, file, cb) => {
@@ -46,8 +36,7 @@ const fileFilter = (req, file, cb) => {
 
 // multer instance
 const upload = multer({ 
-  storage: storage,
-  fileFilter: fileFilter
+  storage: storage
 });
 
 const uploadMiddleware = {
